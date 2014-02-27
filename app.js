@@ -6,6 +6,7 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
+var login = require('./routes/login');
 var http = require('http');
 var path = require('path');
 
@@ -31,8 +32,21 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+function checkAuth(req, res, next) {
+    if (!req.session.user_id) {
+        res.send('You are not authorized to view this page');
+    } else {
+        next();
+    }
+}
+
+
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/login', login.login);
+app.post('/login', login.do_login);
+app.get('/logout', login.logout);
+
+app.get('/users', checkAuth, user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
