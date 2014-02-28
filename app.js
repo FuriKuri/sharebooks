@@ -13,6 +13,11 @@ var path = require('path');
 
 var app = express();
 
+var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/nodetest1';
+var mongo = require('mongoskin');
+var db = mongo.db(mongoUri, {native_parser:true});
+db.bind('user');
+
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -46,16 +51,9 @@ app.get('/login', login.login);
 app.post('/login', login.do_login);
 
 app.get('/register', register.register);
-
-
 app.get('/logout', login.logout);
-
-var mongo = require('mongoskin');
-var db2 = mongo.db("mongodb://localhost:27017/nodetest1", {native_parser:true});
-db2.bind('user');
-
-app.post('/register', register.addUser(db2));
-app.get('/users', user.list(db2));
+app.post('/register', register.addUser(db));
+app.get('/users', user.list(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
