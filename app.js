@@ -6,6 +6,7 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
+var book = require('./routes/book');
 var login = require('./routes/login');
 var register = require('./routes/register')
 var http = require('http');
@@ -17,6 +18,7 @@ var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/nodetest1'
 var mongo = require('mongoskin');
 var db = mongo.db(mongoUri, {native_parser:true});
 db.bind('user');
+db.bind('book');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -40,7 +42,8 @@ if ('development' == app.get('env')) {
 
 function checkAuth(req, res, next) {
     if (!req.session.user_id) {
-        res.send('You are not authorized to view this page');
+        res.location("login");
+        res.redirect("login");
     } else {
         next();
     }
@@ -48,8 +51,11 @@ function checkAuth(req, res, next) {
 
 app.get('/', routes.index);
 app.get('/login', login.login);
-app.post('/login', login.do_login);
+app.get('/books', checkAuth, user.list(db));
+app.get('/addBook', checkAuth, book.showAddBook);
+app.post('/addBook', checkAuth, book.addBook(db));
 
+app.post('/login', login.doLogin(db));
 app.get('/register', register.register);
 app.get('/logout', login.logout);
 app.post('/register', register.addUser(db));
