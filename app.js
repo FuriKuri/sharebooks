@@ -10,8 +10,6 @@ var login = require('./routes/login');
 var register = require('./routes/register')
 var http = require('http');
 var path = require('path');
-var mongo = require('mongodb');
-var monk = require('monk');
 
 var app = express();
 
@@ -48,13 +46,16 @@ app.get('/login', login.login);
 app.post('/login', login.do_login);
 
 app.get('/register', register.register);
-app.post('/register', register.do_register);
+
 
 app.get('/logout', login.logout);
 
-var db = monk('localhost:27017/nodetest1');
+var mongo = require('mongoskin');
+var db2 = mongo.db("mongodb://localhost:27017/nodetest1", {native_parser:true});
+db2.bind('user');
 
-app.get('/users', user.list(db));
+app.post('/register', register.addUser(db2));
+app.get('/users', user.list(db2));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
