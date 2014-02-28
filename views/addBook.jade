@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  form(action='/addBook', method= 'post')
+    fieldset
+      label(for='title') Title
+      input(id='title', type='text', name='title')
+      br
+      label(for='author') Author
+      input(id='author', type='text', name='author')
+      br
+      label(for='year') Year
+      input(id='year', type='text', name='year')
+      br
+      label(for='description') Description
+      textarea(id='description', name='description', rows='5')
+      br
+      label(for='comment') Comment
+      textarea(id='comment', name='comment', rows='5')
+      br
+      input(type='submit', value='Submit')
