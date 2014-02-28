@@ -16,8 +16,7 @@ exports.addUser = function(db) {
                 db.user.insert(user, function(err) {
                     if (err) {
                         res.send("There was a problem adding the information to the database.");
-                    }
-                    else {
+                    } else {
                         res.location("login");
                         res.redirect("login");
                     }
