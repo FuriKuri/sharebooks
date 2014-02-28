@@ -7,8 +7,11 @@ var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
 var login = require('./routes/login');
+var register = require('./routes/register')
 var http = require('http');
 var path = require('path');
+var mongo = require('mongodb');
+var monk = require('monk');
 
 var app = express();
 
@@ -40,13 +43,18 @@ function checkAuth(req, res, next) {
     }
 }
 
-
 app.get('/', routes.index);
 app.get('/login', login.login);
 app.post('/login', login.do_login);
+
+app.get('/register', register.register);
+app.post('/register', register.do_register);
+
 app.get('/logout', login.logout);
 
-app.get('/users', checkAuth, user.list);
+var db = monk('localhost:27017/nodetest1');
+
+app.get('/users', user.list(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
