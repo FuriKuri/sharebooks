@@ -51,7 +51,8 @@ function checkAuth(req, res, next) {
 
 app.get('/', routes.index);
 app.get('/login', login.login);
-app.get('/books', checkAuth, user.list(db));
+app.get('/books', checkAuth, book.list(db));
+app.get('/book/:id', checkAuth, book.show(db))
 app.get('/addBook', checkAuth, book.showAddBook);
 app.post('/addBook', checkAuth, book.addBook(db));
 
@@ -60,6 +61,10 @@ app.get('/register', register.register);
 app.get('/logout', login.logout);
 app.post('/register', register.addUser(db));
 app.get('/users', user.list(db));
+
+//app.get('/user/:id', function(req, res) {
+//    res.send('user' + req.params.id);
+//});
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

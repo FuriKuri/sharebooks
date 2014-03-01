@@ -1,0 +1,8 @@
+extends layout
+block content
+    h1.
+        Book List
+    ul
+        each book, i in booklist
+            li
+                a(href="/book/#{book._id}")= book.title

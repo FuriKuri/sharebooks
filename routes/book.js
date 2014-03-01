@@ -1,3 +1,6 @@
+var mongo = require("mongoskin");
+var BSON = mongo.BSONPure;
+
 exports.showAddBook = function(req, res) {
     res.render('addBook', { title: 'Book' });
 };
@@ -22,3 +25,24 @@ exports.addBook = function(db) {
         });
     }
 }
+
+exports.list = function(db) {
+    return function(req, res) {
+        db.book.findItems({"user_id": req.session.user_id}, function(err, books) {
+            res.render('booklist', {
+                "booklist" : books
+            });
+        });
+    };
+};
+
+exports.show = function(db) {
+    return function(req, res) {
+        db.book.findOne({_id: BSON.ObjectID(req.params.id)}, function(err, book) {
+            var my = book;
+            res.render('book', {
+                "book" : book
+            });
+        });
+    };
+};
