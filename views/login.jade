@@ -5,10 +5,12 @@ block content
   p Welcome to #{title}
   form(action='/login', method= 'post')
     fieldset
-      label(for='username')
+      label(for='username') Username
       input(id='username', type='text', name='username')
-      br
-      label(for='password')
+    fieldset
+      label(for='password') Password
       input(id='password', type='password', name='password')
-      br
+    fieldset
       input(type='submit', value='Submit')
+  div
+    a(href="/register") Register

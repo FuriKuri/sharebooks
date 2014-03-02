@@ -52,7 +52,7 @@ function checkAuth(req, res, next) {
 app.get('/', routes.index);
 app.get('/login', login.login);
 app.get('/books', checkAuth, book.list(db));
-app.get('/book/:id', checkAuth, book.show(db))
+app.get('/book/:id', checkAuth, book.show(db));
 app.get('/addBook', checkAuth, book.showAddBook);
 app.post('/addBook', checkAuth, book.addBook(db));
 
